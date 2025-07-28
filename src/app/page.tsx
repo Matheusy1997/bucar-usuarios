@@ -3,14 +3,21 @@ import { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import TableRow from "../../components/TableRow";
 
-
 export interface Users {
   id: number;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   email: string;
   birthDate: string;
   onDelete?: (id: number) => void;
+}
+
+interface ApiUsers {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  birthDate: string;
 }
 
 export default function Home() {
@@ -18,20 +25,51 @@ export default function Home() {
   const [currentFirstName, setCurrentFirstName] = useState<string>("");
   const [currentLastName, setCurrentLastName] = useState<string>("");
   const [currentEmail, setCurrentEmail] = useState<string>("");
-  const [currentBirthDate, setCurrentBirthDate] = useState<string>('');
+  const [currentBirthDate, setCurrentBirthDate] = useState<string>("");
   const [todoList, setTodoList] = useState<Users[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const searchUsers = async () => {
+      try {
+        const response = await fetch("/api/users");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: ApiUsers[] = await response.json();
+
+        const mapperdUsers: Users[] = data.map((user) => {
+          const formattedBirthDate = new Date(
+            user.birthDate + "T00:00:00"
+          ).toLocaleDateString("pt-BR");
+
+          return {
+            id: user.id,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            birthDate: formattedBirthDate,
+          };
+        });
+        setTodoList(mapperdUsers)
+      } catch(error) {
+        console.error("Erro ao buscar usuários:", error)
+      } finally {
+        setLoading(false);
+      }
+    };
+    searchUsers();
+  }, []);
 
   function addUsers() {
-    const date = new Date(currentBirthDate + 'T00:00:00')
+    const date = new Date(currentBirthDate + "T00:00:00");
     const newItem: Users = {
       id: currentId,
-      firstName: currentFirstName,
-      lastName: currentLastName,
+      firstname: currentFirstName,
+      lastname: currentLastName,
       email: currentEmail,
-      birthDate: date.toLocaleDateString('pt-BR'),
+      birthDate: date.toLocaleDateString("pt-BR"),
     };
     setTodoList((prevTodoList) => [...prevTodoList, newItem]);
     console.log(todoList);
@@ -40,12 +78,12 @@ export default function Home() {
     setCurrentFirstName("");
     setCurrentLastName("");
     setCurrentEmail("");
-    setCurrentBirthDate("")
+    setCurrentBirthDate("");
   }
 
   const filterList = currentFilter
     ? todoList.filter((item) =>
-        item.firstName
+        item.firstname
           .toLocaleLowerCase()
           .includes(currentFilter.toLocaleLowerCase())
       )
@@ -101,18 +139,33 @@ export default function Home() {
               </th>
             </tr>
           </thead>
-          <tbody>
-            {filterList.map((item) => (
-              <TableRow
-                key={item.id}
-                id={item.id}
-                firstName={item.firstName}
-                lastName={item.lastName}
-                email={item.email}
-                birthDate={item.birthDate}
-                onDelete={deleteUsers}
-              />
-            ))}
+          <tbody className="w-full">
+            {loading ? (
+              <tr>
+                <td colSpan={6} className="text-center py-4">
+                  Carregando Usuários...{" "}
+                </td>
+              </tr>
+            ) : filterList.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="text-center py-4">
+                  {" "}
+                  Nenhum usuário encontrado...
+                </td>
+              </tr>
+            ) : (
+              filterList.map((item) => (
+                <TableRow
+                  key={item.id}
+                  id={item.id}
+                  firstname={item.firstname}
+                  lastname={item.lastname}
+                  email={item.email}
+                  birthDate={item.birthDate}
+                  onDelete={deleteUsers}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </section>
