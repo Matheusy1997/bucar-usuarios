@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import TableRow from "../../components/TableRow";
 
-interface ListItem {
+interface Users {
   id: number;
   firstName: string;
   lastName: string;
@@ -17,13 +17,13 @@ export default function Home() {
   const [currentLastName, setCurrentLastName] = useState<string>("");
   const [currentEmail, setCurrentEmail] = useState<string>("");
   const [currentBirthDate, setCurrentBirthDate] = useState<string>("");
-  const [todoList, setTodoList] = useState<ListItem[]>([]);
+  const [todoList, setTodoList] = useState<Users[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("");
 
   useEffect(() => {}, []);
 
-  function addListItem() {
-    const newItem: ListItem = {
+  function addUsers() {
+    const newItem: Users = {
       id: currentId,
       firstName: currentFirstName,
       lastName: currentLastName,
@@ -45,7 +45,7 @@ export default function Home() {
       )
     : todoList;
 
-  const deleteListItem = (idToDelete: number) => {
+  const deleteUsers = (idToDelete: number) => {
     setTodoList((prevTodoList) =>
       prevTodoList.filter((item) => item.id !== idToDelete)
     );
@@ -56,7 +56,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold my-2.5">My to-do List</h1>
       <div className="w-2/4 my-2.5">
         <Input
-          onSave={addListItem}
+          onSave={addUsers}
           idChange={setCurrentId}
           currentId={currentId}
           changeFirstName={setCurrentFirstName}
@@ -92,7 +92,7 @@ export default function Home() {
                 key={item.id}
                 id={item.id}
                 name={item.lastName}
-                onDelete={deleteListItem}
+                onDelete={deleteUsers}
               />
             ))}
           </tbody>
