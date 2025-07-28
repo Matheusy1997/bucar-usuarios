@@ -97,7 +97,7 @@ export default function Input({
       <input
         type="text"
         name="filter"
-        placeholder="Filter name"
+        placeholder="Filter first name"
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
         value={currentFilter}
         onChange={(e) => filterChange(e.target.value)}

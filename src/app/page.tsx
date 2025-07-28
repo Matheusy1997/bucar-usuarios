@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import TableRow from "../../components/TableRow";
 
-interface Users {
+
+export interface Users {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
   birthDate: string;
+  onDelete?: (id: number) => void;
 }
 
 export default function Home() {
@@ -16,25 +18,29 @@ export default function Home() {
   const [currentFirstName, setCurrentFirstName] = useState<string>("");
   const [currentLastName, setCurrentLastName] = useState<string>("");
   const [currentEmail, setCurrentEmail] = useState<string>("");
-  const [currentBirthDate, setCurrentBirthDate] = useState<string>("");
+  const [currentBirthDate, setCurrentBirthDate] = useState<string>('');
   const [todoList, setTodoList] = useState<Users[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("");
 
   useEffect(() => {}, []);
 
   function addUsers() {
+    const date = new Date(currentBirthDate + 'T00:00:00')
     const newItem: Users = {
       id: currentId,
       firstName: currentFirstName,
       lastName: currentLastName,
       email: currentEmail,
-      birthDate: currentBirthDate,
+      birthDate: date.toLocaleDateString('pt-BR'),
     };
     setTodoList((prevTodoList) => [...prevTodoList, newItem]);
     console.log(todoList);
 
     setCurrentId(0);
     setCurrentFirstName("");
+    setCurrentLastName("");
+    setCurrentEmail("");
+    setCurrentBirthDate("")
   }
 
   const filterList = currentFilter
@@ -79,7 +85,16 @@ export default function Home() {
                 ID
               </th>
               <th className="py-3 px-4 text-left text-sm font-semibold uppercase tracking-wider">
-                To-do
+                First Name
+              </th>
+              <th className="py-3 px-4 text-left text-sm font-semibold uppercase tracking-wider">
+                Last Name
+              </th>
+              <th className="py-3 px-4 text-left text-sm font-semibold uppercase tracking-wider">
+                Email
+              </th>
+              <th className="py-3 px-4 text-left text-sm font-semibold uppercase tracking-wider">
+                Birth Date
               </th>
               <th className="py-3 px-4 text-left text-sm font-semibold uppercase tracking-wider">
                 Delete
@@ -91,7 +106,10 @@ export default function Home() {
               <TableRow
                 key={item.id}
                 id={item.id}
-                name={item.lastName}
+                firstName={item.firstName}
+                lastName={item.lastName}
+                email={item.email}
+                birthDate={item.birthDate}
                 onDelete={deleteUsers}
               />
             ))}
