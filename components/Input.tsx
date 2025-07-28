@@ -3,21 +3,33 @@ import { FormEvent } from "react";
 interface InputProps {
   onSave: () => void;
   idChange: (n: number) => void;
-  textChange: (n: string) => void;
+  changeFirstName: (n: string) => void;
+  changeLastName: (n: string) => void;
+  changeEmail: (n: string) => void;
+  changeBirthDate: (n: string) => void;
   filterChange: (n: string) => void;
-  currentFilter: string
   currentId: number;
-  currentNome: string;
+  currentFirstName: string;
+  currentLastName: string;
+  currentEmail: string;
+  currentBirthDate: string;
+  currentFilter: string;
 }
 
 export default function Input({
   onSave,
   idChange,
-  textChange,
+  changeFirstName,
+  changeLastName,
+  changeEmail,
+  changeBirthDate,
   filterChange,
-  currentFilter,
   currentId,
-  currentNome,
+  currentFirstName,
+  currentLastName,
+  currentEmail,
+  currentBirthDate,
+  currentFilter,
 }: InputProps) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -41,11 +53,38 @@ export default function Input({
 
       <input
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-        value={currentNome}
+        value={currentFirstName}
         type="text"
-        placeholder="To-do"
+        placeholder="First Name"
         required
-        onChange={(e) => textChange(e.target.value)}
+        onChange={(e) => changeFirstName(e.target.value)}
+      />
+
+      <input
+        className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+        value={currentLastName}
+        type="text"
+        placeholder="Last Name"
+        required
+        onChange={(e) => changeLastName(e.target.value)}
+      />
+
+      <input
+        className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+        value={currentEmail}
+        type="email"
+        placeholder="Email"
+        required
+        onChange={(e) => changeEmail(e.target.value)}
+      />
+
+      <input
+        className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+        value={currentBirthDate}
+        type="date"
+        placeholder="Birth Date"
+        required
+        onChange={(e) => changeBirthDate(e.target.value)}
       />
 
       <button
@@ -58,10 +97,10 @@ export default function Input({
       <input
         type="text"
         name="filter"
-        placeholder="Filter list"
+        placeholder="Filter name"
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
         value={currentFilter}
-        onChange={e => filterChange(e.target.value)}
+        onChange={(e) => filterChange(e.target.value)}
       />
     </form>
   );
