@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import TableRow from "../../components/TableRow";
-
 export interface Users {
   id: number;
   firstname: string;
@@ -33,7 +32,7 @@ export default function Home() {
   useEffect(() => {
     const searchUsers = async () => {
       try {
-        const response = await fetch("/api/users");
+        const response = await fetch("");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
