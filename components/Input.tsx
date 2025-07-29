@@ -1,34 +1,19 @@
+import { Users } from "@/app/page";
 import { FormEvent } from "react";
 
 interface InputProps {
   onSave: () => void;
-  idChange: (n: number) => void;
-  changeFirstName: (n: string) => void;
-  changeLastName: (n: string) => void;
-  changeEmail: (n: string) => void;
-  changeBirthDate: (n: string) => void;
-  filterChange: (n: string) => void;
-  currentId: number;
-  currentFirstName: string;
-  currentLastName: string;
-  currentEmail: string;
-  currentBirthDate: string;
+  handleForm: (e: React.ChangeEvent<HTMLInputElement>) => void
+  filterChange: (n: string) => void; 
+  form: Users
   currentFilter: string;
 }
 
 export default function Input({
   onSave,
-  idChange,
-  changeFirstName,
-  changeLastName,
-  changeEmail,
-  changeBirthDate,
+  handleForm,
+  form,
   filterChange,
-  currentId,
-  currentFirstName,
-  currentLastName,
-  currentEmail,
-  currentBirthDate,
   currentFilter,
 }: InputProps) {
   const handleSubmit = (e: FormEvent) => {
@@ -43,48 +28,53 @@ export default function Input({
     >
       <input
         className="w-2/4 m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-        value={currentId === 0 ? "" : currentId}
+        name="id"
+        value={form.id === 0 ? "" : form.id}
         type="number"
         placeholder="ID"
         min={0}
         required
-        onChange={(e) => idChange(Number(e.target.value))}
+        onChange={handleForm}
       />
 
       <input
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-        value={currentFirstName}
+        name="firstname"
+        value={form.firstname}
         type="text"
         placeholder="First Name"
         required
-        onChange={(e) => changeFirstName(e.target.value)}
+        onChange={handleForm}
       />
 
       <input
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-        value={currentLastName}
+        name="lastname"
+        value={form.lastname}
         type="text"
         placeholder="Last Name"
         required
-        onChange={(e) => changeLastName(e.target.value)}
+        onChange={handleForm}
       />
 
       <input
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-        value={currentEmail}
+        name="email"
+        value={form.email}
         type="email"
         placeholder="Email"
         required
-        onChange={(e) => changeEmail(e.target.value)}
+        onChange={handleForm}
       />
 
       <input
         className="w-full m-3 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-        value={currentBirthDate}
+        name="birthDate"
+        value={form.birthDate}
         type="date"
         placeholder="Birth Date"
         required
-        onChange={(e) => changeBirthDate(e.target.value)}
+        onChange={handleForm}
       />
 
       <button

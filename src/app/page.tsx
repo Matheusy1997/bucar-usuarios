@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import TableRow from "../../components/TableRow";
+import { searchUsers } from "../../components/users";
 export interface Users {
   id: number;
   firstname: string;
@@ -20,64 +21,58 @@ interface ApiUsers {
 }
 
 export default function Home() {
-  const [currentId, setCurrentId] = useState<number>(0);
-  const [currentFirstName, setCurrentFirstName] = useState<string>("");
-  const [currentLastName, setCurrentLastName] = useState<string>("");
-  const [currentEmail, setCurrentEmail] = useState<string>("");
-  const [currentBirthDate, setCurrentBirthDate] = useState<string>("");
+  const [form, setForm] = useState<ApiUsers>({
+    id: 0,
+    firstname: '',
+    lastname: '',
+    email: '',
+    birthDate: ''
+  });
   const [todoList, setTodoList] = useState<Users[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const searchUsers = async () => {
-      try {
-        const response = await fetch("");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data: ApiUsers[] = await response.json();
-
-        const mapperdUsers: Users[] = data.map((user) => {
-          const formattedBirthDate = new Date(
-            user.birthDate + "T00:00:00"
-          ).toLocaleDateString("pt-BR");
-
-          return {
-            id: user.id,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            email: user.email,
-            birthDate: formattedBirthDate,
-          };
-        });
-        setTodoList(mapperdUsers)
-      } catch(error) {
-        console.error("Erro ao buscar usuários:", error)
-      } finally {
-        setLoading(false);
-      }
-    };
-    searchUsers();
+    searchUsers().then(setTodoList)
+    setLoading(false)
   }, []);
 
+  function handleForm(e:React.ChangeEvent<HTMLInputElement>):void {
+    const { name, value } = e.target
+    if(name === 'id') {
+      const id = Number(value)
+      setForm((prev) => ({...prev, [name]: id}))
+    } else {
+      setForm((prev) => ({...prev, [name]: value}))
+    }
+  }
+
   function addUsers() {
-    const date = new Date(currentBirthDate + "T00:00:00");
+    const date = new Date(form.birthDate + "T00:00:00");
+    if(todoList.some(user => user.id === form.id)) {
+      alert('id já cadastrado') 
+      setForm({
+        id: 0,
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email: form.email,
+        birthDate: form.birthDate
+      })
+      return
+    }
     const newItem: Users = {
-      id: currentId,
-      firstname: currentFirstName,
-      lastname: currentLastName,
-      email: currentEmail,
+      id: form.id,
+      firstname: form.firstname,
+      lastname: form.lastname,
+      email: form.email,
       birthDate: date.toLocaleDateString("pt-BR"),
     };
     setTodoList((prevTodoList) => [...prevTodoList, newItem]);
-    console.log(todoList);
-
-    setCurrentId(0);
-    setCurrentFirstName("");
-    setCurrentLastName("");
-    setCurrentEmail("");
-    setCurrentBirthDate("");
+    form.id = 0
+    form.firstname = ''
+    form.lastname = ''
+    form.email = ''
+    form.birthDate= ''
   }
 
   const filterList = currentFilter
@@ -100,16 +95,8 @@ export default function Home() {
       <div className="w-2/4 my-2.5">
         <Input
           onSave={addUsers}
-          idChange={setCurrentId}
-          currentId={currentId}
-          changeFirstName={setCurrentFirstName}
-          currentFirstName={currentFirstName}
-          changeLastName={setCurrentLastName}
-          currentLastName={currentLastName}
-          changeEmail={setCurrentEmail}
-          currentEmail={currentEmail}
-          changeBirthDate={setCurrentBirthDate}
-          currentBirthDate={currentBirthDate}
+          form={form}
+          handleForm={handleForm}
           filterChange={setCurrentFilter}
           currentFilter={currentFilter}
         ></Input>
