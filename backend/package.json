@@ -1,0 +1,18 @@
+{
+  "name": "registro-de-usuarios",
+  "version": "1.0.0",
+  "description": "Servidor para suprir um registro de usuarios",
+  "license": "ISC",
+  "author": "Matheus de Oliveira",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.3",
+    "sequelize": "^6.37.7"
+  }
+}
